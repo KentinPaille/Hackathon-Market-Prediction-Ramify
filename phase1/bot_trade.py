@@ -17,14 +17,14 @@ from collections import deque
 # ----------------------------
 # CONFIG / HYPERPARAMS (tune quickly)
 # ----------------------------
-VOL_TARGET = 0.03        # cible de vol (par période)
+VOL_TARGET = 0.05        # cible de vol (par période)
 EMA_SHORT = 5
 EMA_LONG = 21
 RLS_DELTA = 0.999        # forgetting factor
 RLS_P0 = 1e4             # initial P diag
 MAX_POS = 1.0
 MIN_POS = 0.0
-STOP_LOSS_PCT = 0.07     # stop loss relatif depuis entrée (7%)
+STOP_LOSS_PCT = 0.2     # stop loss relatif depuis entrée (7%)
 MAX_HOLD_EPOCHS = 50
 DRAWDOWN_DEFUSE = 0.15
 JITTER_STD = 0.007
