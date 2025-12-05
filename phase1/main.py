@@ -14,6 +14,7 @@ import pandas as pd
 from bot_trade import make_decision as decision_generator
 import matplotlib.pyplot as plt
 
+max_runs = 10
 
 def find_csv_file(path_csv: str) -> pd.DataFrame:
     if not os.path.exists(path_csv):
@@ -55,7 +56,7 @@ def main():
         prices = find_csv_file(path_csv=path_csv)
     else:
         raise ValueError("No path to the csv file provided, ./main.py <path_to_csv>")
-    for i in range(0, max_epoch):
+    for i in range(0, max_runs):
         output = []
         for index, row in prices.iterrows():
             decision = decision_generator(int(index), float(row['Asset A']))
@@ -67,14 +68,14 @@ def main():
         local_score = get_local_score(prices=prices, positions=positions)
         global_base_score += local_score["scores"]["base_score"]
         global_pnl += local_score["stats"]["cumulative_return"]*100
-        print(f"Run {i+1}/{max_epoch} - PnL: {local_score['stats']['cumulative_return']*100}%, Base Score: {local_score["scores"]["base_score"]}")
+        print(f"Run {i+1}/{max_runs} - PnL: {local_score['stats']['cumulative_return']*100}%, Base Score: {local_score["scores"]["base_score"]}")
         # if len(sys.argv) > 2 and sys.argv[2] == "--show-graph":
         #     show_result(local_score, is_show_graph=True)
         # else:
         #     show_result(local_score, is_show_graph=False)
         #     print("\033[91mpour afficher le graphique, utilisez la commande --show-graph: ./main.py <path_to_csv> --show-graph\033[0m")
-    print(f"Score moyen sur {max_epoch} runs: {global_pnl/max_epoch}")
-    print(f"Base score moyen sur {max_epoch} runs: {global_base_score/max_epoch}")
+    print(f"Base score moyen sur {max_runs} runs: {global_base_score/max_runs}")
+    print(f"PnL moyen sur {max_runs} runs: {global_pnl/max_runs}")
 
 if __name__ == "__main__":
     main()
