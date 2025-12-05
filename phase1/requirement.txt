@@ -1,0 +1,30 @@
+matplotlib
+pandas
+numpy
+
+# Optional dependencies below (uncomment if needed)
+# scipy
+# scikit-learn
+# xgboost
+# lightgbm
+# catboost
+# nltk
+# spacy
+# transformers
+# optuna
+# scikit-optimize
+# numba
+# joblib
+# python-dateutil
+# pyyaml
+# python-json-logger
+# celery
+# python-multipart
+# pillow
+# opencv-python
+# python-utils
+# python-dotenv
+# click
+# tqdm
+# python-toolz
+# python-backoff
