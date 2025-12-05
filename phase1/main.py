@@ -47,27 +47,33 @@ def validate_decision(decision: dict) -> bool:
     return True
 
 def main():
-    output = []
-
+    global_pnl = 0
+    global_base_score = 0
     if (len(sys.argv) > 1):
         path_csv = sys.argv[1]
         prices = find_csv_file(path_csv=path_csv)
     else:
         raise ValueError("No path to the csv file provided, ./main.py <path_to_csv>")
-
-    for index, row in prices.iterrows():
-        decision = decision_generator(int(index), float(row['Asset A']))
-        if not validate_decision(decision):
-            raise ValueError(f"Décision invalide: {decision}")
-        decision['epoch'] = int(index)
-        output.append(decision)
-    positions = pd.DataFrame(output).set_index("epoch")
-    local_score = get_local_score(prices=prices, positions=positions)
-    if len(sys.argv) > 2 and sys.argv[2] == "--show-graph":
-        show_result(local_score, is_show_graph=True)
-    else:
-        show_result(local_score, is_show_graph=False)
-        print("\033[91mpour afficher le graphique, utilisez la commande --show-graph: ./main.py <path_to_csv> --show-graph\033[0m")
+    for i in range(0, 10):
+        output = []
+        for index, row in prices.iterrows():
+            decision = decision_generator(int(index), float(row['Asset A']))
+            if not validate_decision(decision):
+                raise ValueError(f"Décision invalide: {decision}")
+            decision['epoch'] = int(index)
+            output.append(decision)
+        positions = pd.DataFrame(output).set_index("epoch")
+        local_score = get_local_score(prices=prices, positions=positions)
+        global_base_score += local_score["scores"]["base_score"]
+        global_pnl += local_score["stats"]["cumulative_return"]*100
+        print(f"Run {i+1}/10 - PnL: {local_score['stats']['cumulative_return']*100}%, Base Score: {local_score["scores"]["base_score"]}")
+        # if len(sys.argv) > 2 and sys.argv[2] == "--show-graph":
+        #     show_result(local_score, is_show_graph=True)
+        # else:
+        #     show_result(local_score, is_show_graph=False)
+        #     print("\033[91mpour afficher le graphique, utilisez la commande --show-graph: ./main.py <path_to_csv> --show-graph\033[0m")
+    print(f"Score moyen sur 10 runs: {global_pnl/10}")
+    print(f"Base score moyen sur 10 runs: {global_base_score/10}")
 
 if __name__ == "__main__":
     main()
